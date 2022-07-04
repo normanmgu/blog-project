@@ -32,7 +32,7 @@ BlogPost.findById(
         console.log(error, blogspot);
     }
 )
-id = "6233d366f091391eb6d4c13b";
+id = "62437d647d415a9841a3d358";
 
 BlogPost.findByIdAndUpdate(
     id,
@@ -43,5 +43,12 @@ BlogPost.findByIdAndUpdate(
         console.log(error, blogspot);
     }
 )
+let query = "";
+let options = "";
+let count = BlogPost.collection.count();
+console.log(`count = ${count}`);
 
+BlogPost.findByIdAndDelete(id, (error, blogspot) => {
+    console.log(error, blogspot);
+});
 
