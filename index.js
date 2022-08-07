@@ -22,6 +22,12 @@ app.use(expressSession({
     resave: true
 }));
 
+global.loggedIn = null;
+global.searching = false;
+app.use("*", (req, res, next) =>{ // "*" specifies for ALL request
+    loggedIn = req.session.userId;
+    next();
+})
 
 /* Controllers Imports */
 const newPostController = require("./controllers/newPost.js");
@@ -32,6 +38,8 @@ const newUserController = require("./controllers/newUser");
 const storeUserController = require("./controllers/storeUser");
 const loginController = require("./controllers/login");
 const loginUserController = require("./controllers/loginUser");
+const logoutController = require("./controllers/logout");
+const findController = require("./controllers/findPost");
 
 const mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost/my_database", {useNewUrlParser: true});
@@ -57,6 +65,8 @@ app.get('/posts/new', authMiddleware, newPostController);
 
 app.get('/auth/login', redirectIfAuthenticatedMiddleware, loginController);
 
+app.get("/auth/logout", logoutController);
+
 /* Handling POST requests */
 app.post('/posts/store', authMiddleware, storePostController);
 
@@ -64,4 +74,7 @@ app.post("/users/register", redirectIfAuthenticatedMiddleware, storeUserControll
 
 app.post('/users/login', redirectIfAuthenticatedMiddleware, loginUserController);
 
+app.post('/posts/find', findController);
 
+
+app.use((req, res) => res.render("404"));
